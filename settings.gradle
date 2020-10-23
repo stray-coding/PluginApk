@@ -1,0 +1,4 @@
+include ':plugin'
+include ':other'
+include ':app'
+rootProject.name = "PluginApk"
