@@ -39,6 +39,9 @@ public class PluginResUtils {
     }
 
     private static int getId(String className, String name) {
+        /**
+         * 作为插件时：因为res资源只有该插件apk含有，所以报名应该为该Module中AndroidManifest中的包名，并且应该由我们实现的pluginRes去get
+         */
         try {
             if (!PluginManager.INSTANCE.is_plugin()) {
                 return PluginUtils.getApp().getResources().getIdentifier(name, className, PluginUtils.getApp().getPackageName());
