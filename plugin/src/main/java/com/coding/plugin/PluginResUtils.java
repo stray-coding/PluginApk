@@ -2,7 +2,12 @@ package com.coding.plugin;
 
 import android.util.Log;
 
-
+/**
+ * @author: Coding.He
+ * @date: 2020/10/22
+ * @emil: 229101253@qq.com
+ * @des: 插件资源工具类，主要对插件apk中resource进行生成, 插件中的所有资源必须用该类来获取id
+ */
 public class PluginResUtils {
     private static final String TAG = "PluginResUtils";
 
@@ -38,16 +43,15 @@ public class PluginResUtils {
         return getId("layout", name);
     }
 
+    /**
+     * 作为插件时：因为res资源只有该插件apk含有，所以包名应该为该Module中AndroidManifest中的包名，并且应该由我们实现的pluginRes去get
+     */
     private static int getId(String className, String name) {
-        /**
-         * 作为插件时：因为res资源只有该插件apk含有，所以报名应该为该Module中AndroidManifest中的包名，并且应该由我们实现的pluginRes去get
-         */
         try {
-            if (!PluginManager.INSTANCE.is_plugin()) {
+            if (!PluginManager.INSTANCE.isPlugin()) {
                 return PluginUtils.getApp().getResources().getIdentifier(name, className, PluginUtils.getApp().getPackageName());
-            } else {
-                return PluginManager.INSTANCE.getPluginRes().getIdentifier(name, className, PluginManager.INSTANCE.getPlugin_package_name());
             }
+            return PluginManager.INSTANCE.getPluginRes().getIdentifier(name, className, PluginManager.INSTANCE.getPluginPackageName());
         } catch (Exception e) {
             Log.w(TAG, e.getMessage() + "");
         }

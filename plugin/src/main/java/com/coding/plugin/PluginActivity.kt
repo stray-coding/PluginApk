@@ -17,16 +17,10 @@ import android.view.*
  * @emil: 229101253@qq.com
  * @des:插件化(在其他APK中动态加载)Activity的基类，
  * 切忌继承该类的activity，尽量减少使用this
- * 如果在生命周期有特殊操作，子类重写即可，否则判断  该类是否为插件，不是插件的话直接super即可
+ * 如果在生命周期有特殊操作，子类重写即可，否则判断 该类是否为插件，不是插件的话直接super即可
  */
 abstract class PluginActivity : Activity(), PluginInterface {
     private var TAG = this::class.java.simpleName
-
-    /**
-     * true  作为插件使用，方法应该转调mActivity
-     * false 独立作为APP，用自身资源操作
-     * */
-    private var isPlugin = false
 
     /**
      * 代理activity的实例
@@ -38,10 +32,7 @@ abstract class PluginActivity : Activity(), PluginInterface {
     }
 
     override fun onCreate(bundle: Bundle?) {
-        if (bundle != null) {
-            isPlugin = bundle.getBoolean(PluginManager.TAG_IS_PLUGIN, false)
-        }
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onCreate(bundle)
             mActivity = this
         }
@@ -49,87 +40,87 @@ abstract class PluginActivity : Activity(), PluginInterface {
 
     override fun onStart() {
         Log.d(TAG, "onStart")
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onStart()
         }
     }
 
     override fun onResume() {
         Log.d(TAG, "onResume")
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onResume()
         }
     }
 
     override fun onPause() {
         Log.d(TAG, "onPause")
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onPause()
         }
     }
 
     override fun onStop() {
         Log.d(TAG, "onStop")
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onStop()
         }
     }
 
     override fun onRestart() {
         Log.d(TAG, "onRestart")
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onRestart()
         }
     }
 
     override fun onNewIntent(intent: Intent?) {
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onNewIntent(intent)
         }
     }
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onDestroy()
         }
     }
 
     override fun onBackPressed() {
         Log.d(TAG, "onBackPressed")
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onBackPressed()
         }
     }
 
     override fun finish() {
         Log.d(TAG, "finish")
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.finish()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         Log.d(TAG, "onRequestPermissionsResult")
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.onConfigurationChanged(newConfig)
         }
     }
 
     override fun startActivity(intent: Intent?) {
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.startActivity(intent)
         } else {
             mActivity.startActivity(intent)
@@ -137,7 +128,7 @@ abstract class PluginActivity : Activity(), PluginInterface {
     }
 
     override fun getLayoutInflater(): LayoutInflater {
-        return if (!isPlugin)
+        return if (!PluginManager.isPlugin)
             super.getLayoutInflater()
         else
             mActivity.layoutInflater
@@ -145,14 +136,14 @@ abstract class PluginActivity : Activity(), PluginInterface {
     }
 
     override fun getWindowManager(): WindowManager? {
-        return if (!isPlugin)
+        return if (!PluginManager.isPlugin)
             super.getWindowManager()
         else
             mActivity.windowManager
     }
 
     override fun getApplicationInfo(): ApplicationInfo? {
-        return if (!isPlugin)
+        return if (!PluginManager.isPlugin)
             super.getApplicationInfo()
         else
             mActivity.applicationInfo
@@ -160,28 +151,28 @@ abstract class PluginActivity : Activity(), PluginInterface {
 
 
     override fun getResources(): Resources {
-        return if (!isPlugin)
+        return if (!PluginManager.isPlugin)
             super.getResources()
         else
             mActivity.resources
     }
 
     override fun getAssets(): AssetManager {
-        return if (!isPlugin)
+        return if (!PluginManager.isPlugin)
             super.getAssets()
         else
             mActivity.assets
     }
 
     override fun getClassLoader(): ClassLoader {
-        return if (!isPlugin)
+        return if (!PluginManager.isPlugin)
             super.getClassLoader()
         else
             mActivity.classLoader
     }
 
     override fun setContentView(layoutResID: Int) {
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.setContentView(layoutResID)
         } else {
             mActivity.setContentView(layoutResID)
@@ -189,7 +180,7 @@ abstract class PluginActivity : Activity(), PluginInterface {
     }
 
     override fun getWindow(): Window {
-        return if (!isPlugin) {
+        return if (!PluginManager.isPlugin) {
             super.getWindow()
         } else {
             mActivity.window
@@ -197,7 +188,7 @@ abstract class PluginActivity : Activity(), PluginInterface {
     }
 
     override fun setContentView(view: View?) {
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.setContentView(view)
         } else {
             mActivity.setContentView(view)
@@ -205,7 +196,7 @@ abstract class PluginActivity : Activity(), PluginInterface {
     }
 
     override fun setContentView(view: View?, params: ViewGroup.LayoutParams?) {
-        if (!isPlugin) {
+        if (!PluginManager.isPlugin) {
             super.setContentView(view, params)
         } else {
             mActivity.setContentView(view, params)
@@ -213,9 +204,9 @@ abstract class PluginActivity : Activity(), PluginInterface {
     }
 
     override fun getPackageName(): String {
-        return if(!isPlugin){
+        return if (!PluginManager.isPlugin) {
             super.getPackageName()
-        }else{
+        } else {
             mActivity.packageName
         }
     }

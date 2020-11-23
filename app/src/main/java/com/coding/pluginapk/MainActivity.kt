@@ -40,7 +40,7 @@ class MainActivity : Activity() {
 
     fun startApk() {
         val intent = Intent(this@MainActivity, ProxyActivity::class.java)
-        intent.putExtra("className", "com.coding.other.Main1Activity")
+        intent.putExtra(PluginManager.TAG_NEW_ACTIVITY_NAME, "com.coding.other.Main1Activity")
         startActivity(intent)
     }
 }

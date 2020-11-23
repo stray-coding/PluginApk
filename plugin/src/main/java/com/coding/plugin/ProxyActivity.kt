@@ -28,7 +28,7 @@ class ProxyActivity : Activity() {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
         try {
-            val clsName = intent.getStringExtra("className")
+            val clsName = intent.getStringExtra(PluginManager.TAG_NEW_ACTIVITY_NAME)
             Log.d(TAG, "activity name:$clsName")
             val cls = PluginManager.pluginDexClassLoader.loadClass(clsName)
             val newInstance = cls.newInstance()
@@ -36,7 +36,6 @@ class ProxyActivity : Activity() {
                 pluginInterface = newInstance
                 pluginInterface.attach(this)
                 val bundle = Bundle()
-                bundle.putBoolean(PluginManager.TAG_IS_PLUGIN, true)
                 pluginInterface.onCreate(bundle)
             }
         } catch (e: ClassNotFoundException) {
@@ -50,26 +49,26 @@ class ProxyActivity : Activity() {
 
     override fun startActivity(intent: Intent) {
         val newIntent = Intent(this, ProxyActivity::class.java)
-        newIntent.putExtra("className", intent.component!!.className)
+        newIntent.putExtra(PluginManager.TAG_NEW_ACTIVITY_NAME, intent.component!!.className)
         super.startActivity(newIntent)
     }
 
     override fun getResources(): Resources? {
-        return if (!PluginManager.is_plugin)
+        return if (!PluginManager.isPlugin)
             super.getResources()
         else
             PluginManager.pluginRes
     }
 
     override fun getAssets(): AssetManager? {
-        return if (!PluginManager.is_plugin)
+        return if (!PluginManager.isPlugin)
             super.getAssets()
         else
             PluginManager.pluginAssets
     }
 
     override fun getClassLoader(): ClassLoader? {
-        return if (!PluginManager.is_plugin)
+        return if (!PluginManager.isPlugin)
             super.getClassLoader()
         else
             PluginManager.pluginDexClassLoader

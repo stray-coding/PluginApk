@@ -15,12 +15,11 @@ import java.lang.reflect.Method
  * @author: Coding.He
  * @date: 2020/10/22
  * @emil: 229101253@qq.com
- * @des:插件管理类，主要进行class和resource加载
+ * @des:插件管理类，主要进行classloader和resource的生成,从而调用apk中的资源和类。
  */
-
 object PluginManager {
     private const val TAG = "PluginManager"
-    const val TAG_IS_PLUGIN = "is_plugin"
+    const val TAG_NEW_ACTIVITY_NAME = "activity_class_name"
 
     /**
      * true 作为插件使用，供其他app动态加载该apk,
@@ -28,13 +27,13 @@ object PluginManager {
      * false 作为独立的app使用
      * 在调用 {@link #loadApk(ctx, apkPath)} 方法后，标志位true
      * */
-    var is_plugin = false
+    var isPlugin = false
         private set
 
     /**
      * 插件apk的包名，用于resource的正确加载
      * */
-    var plugin_package_name = ""
+    var pluginPackageName = ""
     private lateinit var appCtx: Context
     lateinit var pluginAssets: AssetManager
     lateinit var pluginRes: Resources
@@ -48,23 +47,22 @@ object PluginManager {
             Log.d(TAG, "ctx is null, apk cannot be loaded dynamically")
             throw RuntimeException("ctx is null, apk cannot be loaded dynamically")
         }
-        plugin_package_name = packageName
-        is_plugin = true
+        pluginPackageName = packageName
+        isPlugin = true
         try {
             appCtx = ctx.applicationContext
             pluginDexClassLoader = DexClassLoader(
                 apkPath,
-                appCtx.getDir("dexOpt", Context.MODE_PRIVATE).absolutePath,
+                appCtx.getDir("dex2opt", Context.MODE_PRIVATE).absolutePath,
                 null,
                 appCtx.classLoader
             )
             pluginPackageArchiveInfo =
                 appCtx.packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES)!!
-            /**
-             * 生成assets、resource
-             * */
+
             pluginAssets = AssetManager::class.java.newInstance()
-            val addAssetPath: Method = AssetManager::class.java.getDeclaredMethod("addAssetPath", String::class.java)
+            val addAssetPath: Method =
+                AssetManager::class.java.getDeclaredMethod("addAssetPath", String::class.java)
             addAssetPath.invoke(pluginAssets, apkPath)
             val superResources: Resources? = ctx.resources
             pluginRes = Resources(
@@ -74,8 +72,8 @@ object PluginManager {
             )
             Log.d(TAG, "dynamic loading of apk success")
         } catch (e: Exception) {
-            Log.d(TAG, "dynamic loading of apl failed")
-            is_plugin = false
+            Log.d(TAG, "dynamic loading of apk failed")
+            isPlugin = false
             e.printStackTrace()
         }
     }
