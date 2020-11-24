@@ -384,9 +384,7 @@ abstract class PluginActivity : Activity(), PluginInterface {
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20201024193735731.gif#pic_center)
 
-好了，以上就是本次关于动态加载apk的全部分享内容了，想要详细了解demo工程的小伙伴，我已经将传送门放到后面了[点我，查看demo工程](https://github.com/stray-coding/PluginApk)最后，如果你觉得这篇文章对你有帮助，解决了你的一部分疑惑，请不要吝啬你热情，在github的demo里面点击一下送上你的star哦！当然你如果能以更热情的方式支持楼主，楼主也会感激涕零。当然，无论你是否打赏我，我也会时不时的分享经验到CSDN论坛，加油吧，各位打工人!
-
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20201024194612137.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2Mzc4ODM2,size_16,color_FFFFFF,t_70#pic_center)
+好了，以上就是本次关于动态加载apk的全部分享内容了，想要详细了解demo工程的小伙伴，我已经将传送门放到后面了[点我，查看demo工程](https://github.com/stray-coding/PluginApk)最后，如果你觉得这篇文章对你有帮助，解决了你的一部分疑惑，请不要吝啬你热情，在github的demo里面点击一下送上你的star哦！
 
 文章参考：
 * [https://www.jianshu.com/p/a4ab102fa4ac](https://www.jianshu.com/p/a4ab102fa4ac)
