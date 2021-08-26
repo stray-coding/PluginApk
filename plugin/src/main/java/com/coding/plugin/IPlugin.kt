@@ -9,10 +9,10 @@ import android.os.Bundle
 /**
  * @author: Coding.He
  * @date: 2020/10/22
- * @emil: 229101253@qq.com
+ * @emil: stray-coding@foxmail.com
  * @des:activity的生命周期管理
  */
-interface PluginInterface {
+interface IPlugin {
     fun attach(activity: Activity)
     fun onCreate(saveInstance: Bundle?)
     fun onStart()

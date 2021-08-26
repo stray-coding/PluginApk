@@ -1,6 +1,7 @@
 package com.coding.plugin
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.res.AssetManager
@@ -9,32 +10,33 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 
 
 /**
  * @author: Coding.He
  * @date: 2020/10/22
- * @emil: 229101253@qq.com
+ * @emil: stray-coding@foxmail.com
  * @des:插件化(在其他APK中动态加载)Activity的基类，
- * 切忌继承该类的activity，尽量减少使用this
+ * 切记   继承该类的activity，尽量减少使用this
  * 如果在生命周期有特殊操作，子类重写即可，否则判断 该类是否为插件，不是插件的话直接super即可
  */
-abstract class PluginActivity : Activity(), PluginInterface {
+abstract class PluginActivity : AppCompatActivity(), IPlugin {
     private var TAG = this::class.java.simpleName
 
     /**
      * 代理activity的实例
      * */
-    lateinit var mActivity: Activity
+    lateinit var proxy: Activity
 
     override fun attach(activity: Activity) {
-        mActivity = activity
+        proxy = activity
     }
 
     override fun onCreate(bundle: Bundle?) {
         if (!PluginManager.isPlugin) {
             super.onCreate(bundle)
-            mActivity = this
+            proxy = this
         }
     }
 
@@ -123,7 +125,7 @@ abstract class PluginActivity : Activity(), PluginInterface {
         if (!PluginManager.isPlugin) {
             super.startActivity(intent)
         } else {
-            mActivity.startActivity(intent)
+            proxy.startActivity(intent)
         }
     }
 
@@ -131,7 +133,7 @@ abstract class PluginActivity : Activity(), PluginInterface {
         return if (!PluginManager.isPlugin)
             super.getLayoutInflater()
         else
-            mActivity.layoutInflater
+            proxy.layoutInflater
 
     }
 
@@ -139,51 +141,65 @@ abstract class PluginActivity : Activity(), PluginInterface {
         return if (!PluginManager.isPlugin)
             super.getWindowManager()
         else
-            mActivity.windowManager
+            proxy.windowManager
     }
 
     override fun getApplicationInfo(): ApplicationInfo? {
         return if (!PluginManager.isPlugin)
             super.getApplicationInfo()
         else
-            mActivity.applicationInfo
+            proxy.applicationInfo
     }
 
+    override fun getBaseContext(): Context {
+        return if (!PluginManager.isPlugin)
+            super.getBaseContext()
+        else
+            proxy.baseContext
+    }
 
     override fun getResources(): Resources {
         return if (!PluginManager.isPlugin)
             super.getResources()
         else
-            mActivity.resources
+            proxy.resources
     }
 
     override fun getAssets(): AssetManager {
         return if (!PluginManager.isPlugin)
             super.getAssets()
         else
-            mActivity.assets
+            proxy.assets
     }
 
     override fun getClassLoader(): ClassLoader {
         return if (!PluginManager.isPlugin)
             super.getClassLoader()
         else
-            mActivity.classLoader
+            proxy.classLoader
     }
+
+    override fun <T : View?> findViewById(id: Int): T {
+        return if (!PluginManager.isPlugin) {
+            super.findViewById(id)
+        } else {
+            proxy.findViewById<T>(id)
+        }
+    }
+
+    //    override fun findViewById(id: Int): View? {
+//        return if (!PluginManager.isPlugin) {
+//            super.findViewById(id)
+//        } else {
+//            proxy.findViewById(id)
+//        }
+//    }
 
     override fun setContentView(layoutResID: Int) {
         if (!PluginManager.isPlugin) {
             super.setContentView(layoutResID)
         } else {
-            mActivity.setContentView(layoutResID)
-        }
-    }
-
-    override fun getWindow(): Window {
-        return if (!PluginManager.isPlugin) {
-            super.getWindow()
-        } else {
-            mActivity.window
+            proxy.setContentView(layoutResID)
         }
     }
 
@@ -191,7 +207,7 @@ abstract class PluginActivity : Activity(), PluginInterface {
         if (!PluginManager.isPlugin) {
             super.setContentView(view)
         } else {
-            mActivity.setContentView(view)
+            proxy.setContentView(view)
         }
     }
 
@@ -199,7 +215,16 @@ abstract class PluginActivity : Activity(), PluginInterface {
         if (!PluginManager.isPlugin) {
             super.setContentView(view, params)
         } else {
-            mActivity.setContentView(view, params)
+            proxy.setContentView(view, params)
+        }
+    }
+
+
+    override fun getWindow(): Window {
+        return if (!PluginManager.isPlugin) {
+            super.getWindow()
+        } else {
+            proxy.window
         }
     }
 
@@ -207,7 +232,7 @@ abstract class PluginActivity : Activity(), PluginInterface {
         return if (!PluginManager.isPlugin) {
             super.getPackageName()
         } else {
-            mActivity.packageName
+            proxy.packageName
         }
     }
 

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import com.coding.plugin.PluginActivity
-import com.coding.plugin.PluginResUtils
 
 class Main1Activity : PluginActivity() {
     override fun onCreate(bundle: Bundle?) {
@@ -13,13 +12,19 @@ class Main1Activity : PluginActivity() {
 
         Log.d("Main1Activity orgin", "onCreate11111")
         Log.d("Main1Activity orgin", "packageName:$packageName")
+        Log.d("Main1Activity orgin", "baseContext$baseContext")
+        Log.d("Main1Activity orgin", "baseContext$theme")
         setContentView(
-            PluginResUtils.getLayoutId("activity_main1")
+            R.layout.activity_main1
+            //PluginResUtils.getLayoutId("activity_main1")
         )
+        Log.d("Main1Activity orgin", "baseContext$baseContext")
+        Log.d("Main1Activity orgin", "baseContext${theme}")
 
         findViewById<Button>(
-            PluginResUtils.getViewId("button")
-        )?.setOnClickListener {
+            R.id.button
+            //PluginResUtils.getViewId("button")
+        ).setOnClickListener {
             startActivity(Intent(this@Main1Activity, Main2Activity::class.java))
         }
     }

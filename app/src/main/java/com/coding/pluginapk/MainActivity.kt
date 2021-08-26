@@ -1,16 +1,14 @@
 package com.coding.pluginapk
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.coding.plugin.PluginManager
-import com.coding.plugin.ProxyActivity
 import java.io.File
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -19,9 +17,7 @@ class MainActivity : Activity() {
             try {
                 val patchDir: File = this.getDir("patch", Context.MODE_PRIVATE)
                 val hotFixFile = File(patchDir, "other-debug.apk")
-                if (!hotFixFile.exists()) {
-                    hotFixFile.writeBytes(assets.open("other-debug.apk").readBytes())
-                }
+                hotFixFile.writeBytes(assets.open("other-debug.apk").readBytes())
                 PluginManager.loadApk(this, hotFixFile.absolutePath, "com.coding.other")
                 Toast.makeText(this, "load apk success", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
@@ -39,8 +35,9 @@ class MainActivity : Activity() {
     }
 
     fun startApk() {
-        val intent = Intent(this@MainActivity, ProxyActivity::class.java)
-        intent.putExtra(PluginManager.TAG_NEW_ACTIVITY_NAME, "com.coding.other.Main1Activity")
-        startActivity(intent)
+        PluginManager.startActivity(this@MainActivity, "com.coding.other.Main1Activity")
+//        val intent = Intent(this@MainActivity, ProxyActivity::class.java)
+//        intent.putExtra(PluginManager.TAG_NEW_ACTIVITY_NAME, "com.coding.other.Main1Activity")
+//        startActivity(intent)
     }
 }
