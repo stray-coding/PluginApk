@@ -3,10 +3,11 @@
 首先动态加载apk，一定会有一个宿主apk和一个插件apk，所谓的动态加载，无非是在宿主的apk中，加载插件apk里的activity，类似于支付宝中打开飞猪、淘票票等页面。而要做到上面这两点，就涉及到了class的动态加载以及资源的动态加载。
 ### 1. 类的动态加载（有兴趣的可以去搜类的加载机制相关博客）
 这里我们需要使用到DexClassLoader(String dexPath,String optimizedDirectory,String librarySearchPath,ClassLoader parent)
-	* dexPath  填写apk的位置即可（应用内目录）
-	* optimizedDirectory 这是存放dex加载后会生存缓存的路径
-	* librarySearchPath c、c++库，大部分情况null即可
-	* parent 该装载器的父装载器，一般为当前执行类的装载器。
+
+* dexPath  填写apk的位置即可（应用内目录）
+* optimizedDirectory 这是存放dex加载后会生存缓存的路径
+* librarySearchPath c、c++库，大部分情况null即可
+* parent 该装载器的父装载器，一般为当前执行类的装载器。
 ```
 pluginDexClassLoader = DexClassLoader(
     apkPath,
